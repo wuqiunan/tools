@@ -9,11 +9,11 @@
  ## 运行效果
 - 截图
 
-![image]()
+![image](https://github.com/wuqiunan/tools/blob/master/Images/pic1.png)
 
 - 手机信息
 
-![image]()
+![image](https://github.com/wuqiunan/tools/blob/master/Images/pic2.png)
 
 ###打包脚本
 
