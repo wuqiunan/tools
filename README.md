@@ -15,6 +15,6 @@
 
 ![image](https://github.com/wuqiunan/tools/blob/master/Images/pic2.png)
 
-###打包脚本
+### 打包脚本
 
 pyinstaller -F cap.py
