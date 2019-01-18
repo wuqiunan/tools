@@ -15,7 +15,7 @@ from threading import Thread
 
 import win32con
 import wx
-from wx.lib.pubsub import pub
+# from wx.lib.pubsub import pub
 from PIL import Image
 
 PATH = os.path.join(os.path.expanduser("~"), 'Desktop')
@@ -188,7 +188,7 @@ class Cap(wx.Panel):
         self.devices_combobox = wx.ComboBox(self, -1, self.devices_info, pos=(15, 30),
                                             size=(320, 45), choices=self.d_list, style=wx.CB_READONLY)
         self.capture_button = wx.Button(parent=self, id=-1, label="截屏并复制到剪贴板", pos=(350, 15), size=(120, 25))
-        self.record_button = wx.Button(parent=self, id=-1, label="开始录屏", pos=(350, 45), size=(120, 25))
+        # self.record_button = wx.Button(parent=self, id=-1, label="开始录屏", pos=(350, 45), size=(120, 25))
         # self.stop_record_button = wx.Button()
         self.is_save_rb = wx.RadioBox(parent=self, id=-1, label='是否保存文件', pos=(363, 75),
                                       choices=['是', '否'], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
@@ -200,12 +200,12 @@ class Cap(wx.Panel):
                                style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_LEFT)
 
         self.Bind(wx.EVT_BUTTON, self.capture_click, self.capture_button)
-        self.Bind(wx.EVT_BUTTON, self.record_click, self.record_button)
+        # self.Bind(wx.EVT_BUTTON, self.record_click, self.record_button)
         # self.Bind(wx.EVT_BUTTON, self.stop_record_click, self.stop_record_button)
         self.Bind(wx.EVT_BUTTON, self.reload_click, self.reload_button)
         self.Bind(wx.EVT_BUTTON, self.clear_click, self.clear_button)
 
-        pub.subscribe(self.update_display, "update")
+        # pub.subscribe(self.update_display, "update")
 
         handler = WxTextCtrlHandler(self.log)
         logger.addHandler(handler)
@@ -214,23 +214,22 @@ class Cap(wx.Panel):
         logger.setLevel(logging.DEBUG)
 
     def capture_click(self, event):
-        print('test')
         if not self.devices_combobox.GetValue():
             logger.warning('没有设备可以截图\n')
             return
 
         self.capture_android(self.devices_combobox.GetValue().split(' ')[0])
         # 是否展示图片
-        if "Windows" in platform.platform():
+        if "Windows" in platform.platform() and self.is_save_rb.GetStringSelection() == '是':
             os.startfile(filepath=os.path.join(PATH, CAP_FILE_NAME))
 
-    def record_click(self, event):
-        if not self.devices_combobox.GetValue():
-            logger.warning('没有设备可以录屏\n')
-            return
-        self.record_button = wx.Button(pos=(350, 45), size=(55, 25))
+    # def record_click(self, event):
+    #     if not self.devices_combobox.GetValue():
+    #         logger.warning('没有设备可以录屏\n')
+    #         return
+    #     self.record_button = wx.Button(pos=(350, 45), size=(55, 25))
         # self.stop_record_button = wx.Button(parent=self, id=-1, label="结束录屏", pos=(415, 45), size=(55, 25))
-        self.record_android(self.devices_combobox.GetValue().split(' ')[0])
+        # self.record_android(self.devices_combobox.GetValue().split(' ')[0])
 
     def reload_click(self, event):
         self.devices_combobox.Clear()
@@ -272,8 +271,8 @@ class Cap(wx.Panel):
         # execute_shell(COPY_CMD.format(d_id=device_id, file_name=RECORD_FILE_NAME, path=PATH))
         # video_path = os.path.join(PATH, CAP_FILE_NAME)
 
-    def update_display(self, msg):
-        self.record_button.SetLabel("{}s".format(msg.data))
+    # def update_display(self, msg):
+        # self.record_button.SetLabel("{}s".format(msg.data))
         # if isinstance(t, int):  # 如果是数字，说明线程正在执行，显示数字
         #     pass
         # else:  # 否则线程未执行，将按钮重新开启
@@ -293,10 +292,10 @@ class RecordThread(Thread):
 
     def run(self):
         execute_shell(RECORD_CMD.format(d_id=self.device_id, file_name=RECORD_FILE_NAME))
-        for i in range(10):
-            time.sleep(1)
-            wx.CallAfter(pub.sendMessage, 'update', i)
-        wx.CallAfter(pub.sendMessage, 'update', )
+        # for i in range(10):
+        #     time.sleep(1)
+        #     wx.CallAfter(pub.sendMessage, 'update', i)
+        # wx.CallAfter(pub.sendMessage, 'update', )
 
 
 class AndroidApp(wx.Frame):
